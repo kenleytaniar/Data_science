@@ -57,7 +57,7 @@ input_df = pd.DataFrame([{
 # Label encoding untuk kolom kategorik
 for col in label_encoders:
     if col in input_df.columns:
-        val = input_df.at[0, col]
+        val = str(input_df.at[0, col])  # pastikan tipe string biasa
         input_df.at[0, col] = label_encoders[col].transform([val])[0]
 
 # Normalisasi numerik
