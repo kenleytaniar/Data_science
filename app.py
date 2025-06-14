@@ -54,12 +54,17 @@ input_df = pd.DataFrame([{
     'MTRANS': mtrans
 }])
 
-# Label encoding untuk kolom kategorik
+# Label encoding untuk kolom kategorik (dengan pengecekan nilai valid)
 for col in label_encoders:
     if col in input_df.columns:
         val = str(input_df.at[0, col])  # pastikan tipe string biasa
-        input_df.at[0, col] = label_encoders[col].transform([val])[0]
-
+        if val in label_encoders[col].classes_:
+            input_df.at[0, col] = label_encoders[col].transform([val])[0]
+        else:
+            st.error(f"Nilai '{val}' pada kolom '{col}' tidak dikenali oleh model.\n"
+                     f"Harap pilih dari: {list(label_encoders[col].classes_)}")
+            st.stop()
+s
 # Normalisasi numerik
 scaled_input = scaler.transform(input_df)
 
