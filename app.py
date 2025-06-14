@@ -6,12 +6,12 @@ import joblib
 # Load model, scaler, dan label encoder
 model = joblib.load("model.pkl")
 scaler = joblib.load("scaler.pkl")
-label_encoders = joblib.load("label.pkl")  # perhatikan: label_encoders (jamak)
+label_encoders = joblib.load("label.pkl")  # Dictionary: kolom -> LabelEncoder
 
 st.title("Prediksi Obesitas Menggunakan Machine Learning")
 st.markdown("Masukkan data untuk memprediksi kategori obesitas.")
 
-# Form input
+# Input form
 st.header("Form Input Data Pengguna")
 
 # Input numerik
@@ -54,21 +54,26 @@ input_df = pd.DataFrame([{
     'MTRANS': mtrans
 }])
 
-# Label encoding untuk kolom kategorik (dengan pengecekan nilai valid)
+# Tampilkan input untuk debugging (opsional)
+st.write("Input Data:", input_df)
+
+# Label encoding untuk kolom kategorik dengan validasi aman
 for col in label_encoders:
     if col in input_df.columns:
-        val = str(input_df.at[0, col])  # pastikan tipe string biasa
-        if val in label_encoders[col].classes_:
-            input_df.at[0, col] = label_encoders[col].transform([val])[0]
-        else:
-            st.error(f"Nilai '{val}' pada kolom '{col}' tidak dikenali oleh model.\n"
-                     f"Harap pilih dari: {list(label_encoders[col].classes_)}")
+        val = str(input_df.at[0, col]).strip()
+        valid_classes = label_encoders[col].classes_
+
+        if val not in valid_classes:
+            st.error(f"❌ Nilai '{val}' tidak dikenali untuk kolom '{col}'. "
+                     f"Pilih salah satu dari: {list(valid_classes)}")
             st.stop()
-s
+        else:
+            input_df.at[0, col] = label_encoders[col].transform([val])[0]
+
 # Normalisasi numerik
 scaled_input = scaler.transform(input_df)
 
-# Prediksi
+# Tombol prediksi
 if st.button("Prediksi"):
     pred = model.predict(scaled_input)[0]
     st.subheader("Hasil Prediksi:")
