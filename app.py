@@ -6,12 +6,13 @@ import joblib
 # Load model, scaler, dan label encoder
 model = joblib.load("model.pkl")
 scaler = joblib.load("scaler.pkl")
-label_encoders = joblib.load("label.pkl")
+label_encoders = joblib.load("label.pkl")  # perhatikan: label_encoders (jamak)
 
 st.title("Prediksi Obesitas Menggunakan Machine Learning")
+st.markdown("Masukkan data untuk memprediksi kategori obesitas.")
 
 # Form input
-st.header("Masukkan Data Pengguna")
+st.header("Form Input Data Pengguna")
 
 # Input numerik
 age = st.number_input("Age", min_value=1.0, step=1.0)
@@ -53,19 +54,17 @@ input_df = pd.DataFrame([{
     'MTRANS': mtrans
 }])
 
-st.write("Kolom input:", input_df.columns.tolist())
-st.write("Kolom encoder:", list(label_encoders.keys()))
-
-
+# Label encoding untuk kolom kategorik
 for col in label_encoders:
     if col in input_df.columns:
-        input_df[col] = label_encoders[col].transform(input_df[col])
+        val = input_df.at[0, col]
+        input_df.at[0, col] = label_encoders[col].transform([val])[0]
 
-# Normalisasi
+# Normalisasi numerik
 scaled_input = scaler.transform(input_df)
 
 # Prediksi
 if st.button("Prediksi"):
     pred = model.predict(scaled_input)[0]
     st.subheader("Hasil Prediksi:")
-    st.write(f"Kategori Obesitas: **{pred}**")
+    st.success(f"Kategori Obesitas: **{pred}**")
