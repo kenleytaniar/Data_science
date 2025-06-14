@@ -6,7 +6,7 @@ import joblib
 # Load model, scaler, dan label encoder
 model = joblib.load("model.pkl")
 scaler = joblib.load("scaler.pkl")
-label_encoders = joblib.load("label_encoder.pkl")
+label_encoders = joblib.load("label.pkl")
 
 st.title("Prediksi Obesitas Menggunakan Machine Learning")
 
@@ -53,9 +53,13 @@ input_df = pd.DataFrame([{
     'MTRANS': mtrans
 }])
 
-# Label encoding
-for col in input_df.select_dtypes(include=['object']).columns:
-    input_df[col] = label_encoders[col].transform(input_df[col])
+st.write("Kolom input:", input_df.columns.tolist())
+st.write("Kolom encoder:", list(label_encoders.keys()))
+
+
+for col in label_encoders:
+    if col in input_df.columns:
+        input_df[col] = label_encoders[col].transform(input_df[col])
 
 # Normalisasi
 scaled_input = scaler.transform(input_df)
