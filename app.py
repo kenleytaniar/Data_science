@@ -60,16 +60,13 @@ st.write("Input Data:", input_df)
 # Label encoding untuk kolom kategorik dengan validasi aman
 for col in label_encoders:
     if col in input_df.columns:
-        val = str(input_df.at[0, col]).strip()
-        valid_classes = label_encoders[col].classes_
-
-        if val not in valid_classes:
-            st.error(f"❌ Nilai '{val}' tidak dikenali untuk kolom '{col}'. "
-                     f"Pilih salah satu dari: {list(valid_classes)}")
+        try:
+            val = str(input_df.at[0, col])  # pastikan bertipe string
+            encoded_val = label_encoders[col].transform([val])[0]
+            input_df.at[0, col] = encoded_val
+        except Exception as e:
+            st.error(f"❌ Nilai '{val}' tidak dikenali untuk kolom '{col}'. Pilih salah satu dari: {label_encoders[col].classes_}")
             st.stop()
-        else:
-            input_df.at[0, col] = label_encoders[col].transform([val])[0]
-
 # Normalisasi numerik
 scaled_input = scaler.transform(input_df)
 
