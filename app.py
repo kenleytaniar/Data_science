@@ -25,7 +25,7 @@ faf = st.slider("Frekuensi aktivitas fisik (FAF)", 0.0, 3.0, 1.0)
 tue = st.slider("Waktu penggunaan teknologi (TUE)", 0.0, 2.0, 1.0)
 
 # Input kategorik
-gender = st.selectbox("Gender", ['Male', 'Female'])
+gender = st.selectbox("Gender", [1, 2])
 calc = st.selectbox("Konsumsi alkohol (CALC)", ['no', 'Sometimes', 'Frequently', 'Always'])
 favc = st.selectbox("Konsumsi makanan berkadar kalori tinggi (FAVC)", ['yes', 'no'])
 scc = st.selectbox("Menghitung kalori (SCC)", ['yes', 'no'])
