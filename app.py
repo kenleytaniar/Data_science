@@ -25,7 +25,8 @@ faf = st.slider("Frekuensi aktivitas fisik (FAF)", 0.0, 3.0, 1.0)
 tue = st.slider("Waktu penggunaan teknologi (TUE)", 0.0, 2.0, 1.0)
 
 # Input kategorik
-gender = st.selectbox("Gender", [1, 2])
+# Pilihan inputan tetap teks agar mudah dipilih user
+gender = st.selectbox("Gender", ['Male', 'Female'])
 calc = st.selectbox("Konsumsi alkohol (CALC)", ['no', 'Sometimes', 'Frequently', 'Always'])
 favc = st.selectbox("Konsumsi makanan berkadar kalori tinggi (FAVC)", ['yes', 'no'])
 scc = st.selectbox("Menghitung kalori (SCC)", ['yes', 'no'])
@@ -33,6 +34,21 @@ smoke = st.selectbox("Merokok (SMOKE)", ['yes', 'no'])
 history = st.selectbox("Riwayat keluarga overweight", ['yes', 'no'])
 caec = st.selectbox("Konsumsi makanan di luar (CAEC)", ['no', 'Sometimes', 'Frequently', 'Always'])
 mtrans = st.selectbox("Transportasi (MTRANS)", ['Public_Transportation', 'Walking', 'Automobile', 'Motorbike', 'Bike'])
+
+# Mapping ke nilai numerik
+gender = 1 if gender == 'Male' else 0
+favc = 1 if favc == 'yes' else 0
+scc = 1 if scc == 'yes' else 0
+smoke = 1 if smoke == 'yes' else 0
+history = 1 if history == 'yes' else 0
+
+calc_map = {"no": 0, "Sometimes": 1, "Frequently": 2, "Always": 3}
+caec_map = {"no": 0, "Sometimes": 1, "Frequently": 2, "Always": 3}
+mtrans_map = {"Public_Transportation": 0, "Walking": 1, "Automobile": 2, "Motorbike": 3, "Bike": 4}
+
+calc = calc_map[calc]
+caec = caec_map[caec]
+mtrans = mtrans_map[mtrans]
 
 # Buat dataframe dari input
 input_df = pd.DataFrame([{
